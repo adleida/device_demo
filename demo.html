@@ -137,10 +137,12 @@
 			var dev = device[sltobj.selectedIndex - 1];
 			alert(dev)
 			sltdev.length=1;
-						
+			sltdev.html(new Option(0,'请选择屏幕'));			
 			for (var i = 0; i < dev.length; i++) {
-				console.log(sltdev[i])
-				sltdev[i+1]=new Option(dev[i],dev[i]);
+				// console.log(dev[i])
+				// sltdev[i+1]=new Option(dev[i],dev[i]);
+				 sltdev.append(new Option(dev[i],dev[i]));
+				// $("#device").append($('<option value="">aaa</option>'));
 			}
 		}
 	$(document).ready(function(){
