@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>device 播放</title>
+	<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/ecmascript" src="jsSHA-2.0.1/src/sha1.js"></script>
+	<style>
+	#left{
+		width:67%;
+		height:520px;
+		float: left;
+	}
+	#right{
+		width:33%;
+		height:520px;
+		float:left;
+		margin-top: 30px;
+	}
+	video{
+		margin-left: 20px;
+		float:left;
+		width: 800px;
+	}
+	#old,#text{
+		margin: 35px 0 75px 20px;
+		float:left;
+	}
+	#hand{
+		background-color: pink;
+		line-height: 30px;
+		width: 60px;
+		margin-top: 10px ;
+		margin-left: 20px;
+		
+	}
+	.lable{
+		width:100%;
+		height: 40px;
+	
+		margin: 15px 0px ;
+		text-align: center;
+		line-height: 40px;
+	}
+	#submit{
+		background: #2edefb;
+		margin-top: 10px;
+		line-height: 30px;
+	}
+
+	</style>
+</head>
+<body>
+	<div id="left">
+	选择屏幕:
+		<select name="regions" id="regions" onChange="getId()">
+			<option value="0">请选择区域</option>
+			<option value="海淀区">海淀区</option>
+			<option value="东城区">东城区</option>
+			<option value="西城区">西城区</option>
+			<option value="朝阳区">朝阳区</option>
+			<option value="昌平区">昌平区</option>
+			<option value="北京朝阳区常营">北京朝阳区常营</option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+			<option value=""></option>
+
+		</select>
+		<select name="device" id="device">
+			<option value="0">请选择屏幕</option>
+		</select>
+	
+		<video width="720" height="480" controls="controls" autoplay>
+			<source src="55b1a38b8e4fef5bf56bbb5e.mp4" type="video/mp4" />
+		</video>
+	</div>
+	<div id="right">
+		<div class="lable">
+			<button id="hand">握手</button>
+		</div>
+
+		<div class="lable">
+			年龄:
+			<select name="age" id="age">
+				<option value="10">1~17</option>
+				<option value="30">18~30</option>
+				<option value="40">30~46</option>
+				<option value="50">46~60</option>
+				<option value="60">>=60</option>
+			</select>
+		</div>
+		<div class="lable">
+			性别:
+			<select name="sex" id="sex">
+				<option value="male">男</option>
+				<option value="female">女</option>	
+			</select>
+		</div>
+		<div class="lable">
+			人数:
+			<select name="count" id="count">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+			</select>
+		</div>
+		<div class="lable">
+			<button id="submit">确定</button>
+		</div>
+	</div>
+	<div>
+		<lable>	 本地的物料Id和规则:<br></lable>
+		<textarea name="old" id="old" cols="30" rows="20">
+			
+		</textarea>
+		<lable>更新的物料ID和规则:<br></lable>
+		<textarea name="order" id="text" cols="30" rows="20">
+			
+		</textarea>
+	</div>
+	
+	
+</body>
+<script type="text/javascript" >
+	var device = [
+		["55b08e2f9c96e45b9a03d231","55b08e2e9c96e45b9a03d230"],["55b08e2b9c96e45b9a03d22d"],["55b0c3649020a99a5561b096"],["55b0c3679020a99a5561b097"],["55b0c3689020a99a5561b098","55b0c3699020a99a5561b09b"],["55b0c36a9020a99a5561b09c","55b0c3699020a99a5561b09a","55b0c3689020a99a5561b099"]
+		];
+		function getId(){			
+			var sltobj = document.getElementById("regions");
+			var sltdev = $("#device");
+			var dev = device[sltobj.selectedIndex - 1];
+			alert(dev)
+			sltdev.length=1;
+						
+			for (var i = 0; i < dev.length; i++) {
+				console.log(sltdev[i])
+				sltdev[i+1]=new Option(dev[i],dev[i]);
+			}
+		}
+	$(document).ready(function(){
+	
+		device_id = "55b08e2f9c96e45b9a03d231"
+		$("#submit").click(function(){
+			age = $("#age").val()
+			gender = $("#sex").val()
+			people_count = $("#count").val()
+			url = "http://uuloop.foobar.site/bid?device_id=" + device_id + "&people_count=" + people_count + "&age=" + age +"&gender=" + gender
+			$.get(url,function(data){
+				media_url = data.media_url
+				// $("video").attr("src",data.media_id+".mp4")
+				$("video").attr("src",media_url)
+			})
+		})
+		orders = [
+			{
+			       "_id": "55b1aaecefc392ff69578c1f",
+			       "media_id": "55b1a38a8e4fef5bf56bb09f",
+			       "user_id": "55b0c4659020a99a5561b09f",
+			       "regions": [
+			            "55b0c46c9020a99a5561b0a0",
+			            "55b0c46c9020a99a5561b0a1",
+			            "55b5f5481c79b1b1421d21a3"
+			       ],
+			       "duration": {
+			            "start_date": "Thu, 20 Jul 2015 17:29:36 GMT",
+			            "end_date": "Thu, 24 Jul 2015 17:29:36 GMT"
+			       },
+			      	"status": "pending",
+		       	"rules": [
+		            		{
+			                	"match": "people_count",
+			                	"value": [
+			                    	5,
+			                    	10
+			                	],
+			                	"price": 0.4,      
+			          		"required": true
+		            		}
+		      		]
+		    	},
+			{	
+			      	"_id": "55b1aaebefc392ff69578c1e",
+			      	"media_id": "55b1a38a8e4fef5bf56bb0a0",
+			      	"user_id": "55b0c4659020a99a5561b09f",
+			      	"regions": [
+			             "55b08e2d9c96e45b9a03d22f",
+			      		"55b08e169c96e45b9a03d22c",
+			            	"55b5f54d1c79b1b1421d21a6"
+			      	],
+			      	"duration": {
+			            "start_date": "Thu, 23 Jul 2015 17:29:36 GMT",
+			            "end_date": "Thu, 24 Jul 2015 17:29:36 GMT"
+			      	},
+			      	"status": "pending",
+			      	"rules": [
+			            {
+			                	"match": "age",
+			                	"value": [
+			                    	20,
+			                    	29
+			             	],
+			                	"price": 0.2,
+			             	"required": true
+			           	}
+			      ]
+			},
+			{
+			      	"_id": "55b1aaeeefc392ff69578c20",
+			      	"media_id": "55b1a3888e4fef5bf56bb09e",
+			      	"user_id": "55b0c4659020a99a5561b09f",
+			      	"regions": [
+			            "55b0c46c9020a99a5561b0a0",
+			            "55b0c46c9020a99a5561b0a1",
+			            "55b0c46b9020a99a5561b09f"
+			      	],
+			      	"duration": {
+			            "start_date": "Thu, 20 Jul 2015 17:29:36 GMT",
+			            "end_date": "Thu, 24 Jul 2015 17:29:36 GMT"
+			      	},
+			      	"status": "pending",
+			      	"rules": [
+			            {
+			                "match": "gender",
+			                "value": "female",
+			                "price": 0.4,
+			                "required": true
+			            },
+			            {
+			                	"match": "age",
+			                	"value": [
+							20,
+			                    	30
+			                	],
+			             	"price": 0.2,
+			      		      "required": true
+			      		}
+			      	]
+			},
+			{
+			      "_id": "55b1aaeeefc392ff69578c21",
+			      "media_id": "55b1a38b8e4fef5bf56bb0a1",
+			      "user_id": "55b0c4659020a99a5561b09f",
+			      "regions": [
+			             "55b08e2d9c96e45b9a03d22f",
+			             "55b5f54c1c79b1b1421d21a5",
+			             "55b5f5491c79b1b1421d21a4"
+			      	],
+			       "duration": {
+			             "start_date": "Thu, 23 Jul 2015 17:29:36 GMT",
+			             "end_date": "Thu, 25 Jul 2015 17:29:36 GMT"
+			      	},
+			      "status": "pending",
+			      "rules": [
+			            {
+				             "match": "people_count",
+				             "price": 0.2,
+				             "required": true,
+				             "value": 4
+			             }
+		             ]
+		      }
+		]
+		// var orderstr = ""
+		$("#old").val(JSON.stringify(orders))
+		$("#hand").click(function(){
+
+			var orderObj = new jsSHA("SHA-1","TEXT")
+			orderObj.update(JSON.stringify(orders))
+			var orderSha = orderObj.getHash("HEX")
+			alert(orderSha)
+
+			sync_url = "http://uuloop.foobar.site/sync?" + "device_id=" + device_id + "&cksum=" + orderSha
+			$.get(sync_url,function(data){
+				if (data.outdated){
+					$.get("http://uuloop.foobar.site/orders?device_id="+device_id,function(data){				
+						// orderstr = data
+						orders = data
+						// $("#text").val(orderstr)
+						$("#text").val(orders)
+						var lastObj = new jsSHA("SHA-1","TEXT")
+						lastObj.update(data)
+						var lastSha = lastObj.getHash("HEX")					
+					})
+				}
+			})
+		})
+	})
+</script>
+</html>
