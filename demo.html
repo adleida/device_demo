@@ -6,48 +6,47 @@
 	<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
 	<script type="text/ecmascript" src="jsSHA-2.0.1/src/sha1.js"></script>
 	<style>
-	#left{
-		width:67%;
-		height:520px;
-		float: left;
-	}
-	#right{
-		width:33%;
-		height:520px;
-		float:left;
-		margin-top: 30px;
-	}
-	video{
-		margin-left: 20px;
-		float:left;
-		width: 800px;
-	}
-	#old,#text{
-		margin: 35px 0 75px 20px;
-		float:left;
-	}
-	#hand{
-		background-color: pink;
-		line-height: 30px;
-		width: 60px;
-		margin-top: 10px ;
-		margin-left: 20px;
+		#left{
+			width:67%;
+			height:520px;
+			float: left;
+		}
+		#right{
+			width:33%;
+			height:520px;
+			float:left;
+			margin-top: 30px;
+		}
+		video{
+			margin-left: 20px;
+			float:left;
+			width: 800px;
+		}
+		#old,#text{
+			margin: 35px 0 75px 20px;
+			float:left;
+		}
+		#hand{
+			background-color: pink;
+			line-height: 30px;
+			width: 60px;
+			margin-top: 10px ;
+			margin-left: 20px;
+			
+		}
+		.lable{
+			width:100%;
+			height: 40px;
 		
-	}
-	.lable{
-		width:100%;
-		height: 40px;
-	
-		margin: 15px 0px ;
-		text-align: center;
-		line-height: 40px;
-	}
-	#submit{
-		background: #2edefb;
-		margin-top: 10px;
-		line-height: 30px;
-	}
-
+			margin: 15px 0px ;
+			text-align: center;
+			line-height: 40px;
+		}
+		#submit{
+			background: #2edefb;
+			margin-top: 10px;
+			line-height: 30px;
+		}
 	</style>
 </head>
 <body>
@@ -131,33 +130,39 @@
 	var device = [
 		["55b08e2f9c96e45b9a03d231","55b08e2e9c96e45b9a03d230"],["55b08e2b9c96e45b9a03d22d"],["55b0c3649020a99a5561b096"],["55b0c3679020a99a5561b097"],["55b0c3689020a99a5561b098","55b0c3699020a99a5561b09b"],["55b0c36a9020a99a5561b09c","55b0c3699020a99a5561b09a","55b0c3689020a99a5561b099"]
 		];
-		function getId(){			
-			var sltobj = document.getElementById("regions");
-			var sltdev = $("#device");
-			var dev = device[sltobj.selectedIndex - 1];
-			alert(dev)
-			sltdev.length=1;
-			sltdev.html(new Option(0,'请选择屏幕'));			
-			for (var i = 0; i < dev.length; i++) {
-				// console.log(dev[i])
-				// sltdev[i+1]=new Option(dev[i],dev[i]);
-				 sltdev.append(new Option(dev[i],dev[i]));
-				// $("#device").append($('<option value="">aaa</option>'));
-			}
-		}
+	device_id = "";
+	function getId(){			
+		var sltobj = document.getElementById("regions");			//获取区域对象
+		var sltdev = $("#device");									//获取device对象
+		var dev = device[sltobj.selectedIndex - 1];					//获取所选区域的device对象
+		sltdev.length=1;											//将device对象的默认选择置为0
+		sltdev.html(new Option(0,'请选择屏幕'));			
+		for (var i = 0; i < dev.length; i++) {
+			// console.log(dev[i])
+			// sltdev[i+1]=new Option(dev[i],dev[i]);
+			 sltdev.append(new Option(dev[i],dev[i]));
+		};
+
+		$("#device").click(function(){
+			device_id = $("#device").val();
+		});
+	}
+	lastSha="";
 	$(document).ready(function(){
-	
-		device_id = "55b08e2f9c96e45b9a03d231"
 		$("#submit").click(function(){
-			age = $("#age").val()
-			gender = $("#sex").val()
-			people_count = $("#count").val()
-			url = "http://uuloop.foobar.site/bid?device_id=" + device_id + "&people_count=" + people_count + "&age=" + age +"&gender=" + gender
-			$.get(url,function(data){
-				media_url = data.media_url
-				// $("video").attr("src",data.media_id+".mp4")
-				$("video").attr("src",media_url)
-			})
+			if (device_id){
+				age = $("#age").val()
+				gender = $("#sex").val()
+				people_count = $("#count").val()
+				url = "http://uuloop.foobar.site/bid?device_id=" + device_id + "&people_count=" + people_count + "&age=" + age +"&gender=" + gender
+				$.get(url,function(data){
+					media_url = data.media_url
+					// $("video").attr("src",data.media_id+".mp4")
+					$("video").attr("src",media_url)
+				});
+			}else{
+				alert("请选择您想要播放的屏幕后再试!")
+			}
 		})
 		orders = [
 			{
@@ -271,26 +276,29 @@
 		// var orderstr = ""
 		$("#old").val(JSON.stringify(orders))
 		$("#hand").click(function(){
-
-			var orderObj = new jsSHA("SHA-1","TEXT")
-			orderObj.update(JSON.stringify(orders))
-			var orderSha = orderObj.getHash("HEX")
-			alert(orderSha)
-
-			sync_url = "http://uuloop.foobar.site/sync?" + "device_id=" + device_id + "&cksum=" + orderSha
-			$.get(sync_url,function(data){
-				if (data.outdated){
-					$.get("http://uuloop.foobar.site/orders?device_id="+device_id,function(data){				
-						// orderstr = data
-						orders = data
-						// $("#text").val(orderstr)
-						$("#text").val(orders)
-						var lastObj = new jsSHA("SHA-1","TEXT")
-						lastObj.update(data)
-						var lastSha = lastObj.getHash("HEX")					
-					})
-				}
-			})
+			if(device_id){
+				//TODO:  把规则的最新sha1保存在本地,每次请求先找本地sha1,没有的话再计算文件sha1
+					var orderObj = new jsSHA("SHA-1","TEXT")
+					orderObj.update(JSON.stringify(orders))
+					var orderSha = orderObj.getHash("HEX")   //计算出sha1
+	
+				sync_url = "http://uuloop.foobar.site/sync?" + "device_id=" + device_id + "&cksum=" + orderSha  		//比对地址
+				$.get(sync_url,function(data){
+					//判断是否同步
+					if (data.outdated){
+						$.get("http://uuloop.foobar.site/orders?device_id="+device_id,function(data){							
+							orders = data;				//同步到的规则赋值给orders
+							$("#text").val(orders);		//显示到页面
+							// 计算接收到的最新规则的sha1
+							var lastObj = new jsSHA("SHA-1","TEXT");
+							lastObj.update(data);
+							lastSha = lastObj.getHash("HEX");					
+						});
+					}
+				});
+			}else{
+				alert("请选择屏幕后,再同步!")
+			};
 		})
 	})
 </script>
